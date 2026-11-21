@@ -1,10 +1,15 @@
-name: Android CI
+name: Android CI & Release
 
 on:
   push:
     branches: [ "main" ]
+    tags:
+      - 'v*'
   pull_request:
     branches: [ "main" ]
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -27,8 +32,13 @@ jobs:
     - name: Run Unit Tests
       run: ./gradlew testDebugUnitTest --no-daemon
 
-    - name: Build Debug APK
-      run: ./gradlew :app:assembleDebug --no-daemon
+    - name: Build Debug & Release APK
+      run: ./gradlew :app:assembleDebug :app:assembleRelease --no-daemon
+
+    - name: Prepare Release APK with Tag Name
+      if: startsWith(github.ref, 'refs/tags/v')
+      run: |
+        cp app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/sanxing-${{ github.ref_name }}.apk
 
     - name: Upload Debug APK Artifact
       uses: actions/upload-artifact@v4
@@ -36,3 +46,16 @@ jobs:
         name: sanxing-app-debug
         path: app/build/outputs/apk/debug/app-debug.apk
         retention-days: 30
+
+    - name: Create GitHub Release
+      if: startsWith(github.ref, 'refs/tags/v')
+      uses: softprops/action-gh-release@v2
+      with:
+        name: "三省 ${{ github.ref_name }}"
+        tag_name: ${{ github.ref_name }}
+        draft: false
+        prerelease: false
+        generate_release_notes: true
+        files: |
+          app/build/outputs/apk/release/sanxing-${{ github.ref_name }}.apk
+          app/build/outputs/apk/release/app-release.apk
