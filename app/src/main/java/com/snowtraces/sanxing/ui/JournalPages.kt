@@ -5,8 +5,6 @@
 
 package com.snowtraces.sanxing.ui
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -21,15 +19,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.snowtraces.sanxing.journal.Category
-import com.snowtraces.sanxing.journal.Draft
-import java.util.Calendar
 
 @Composable
 fun AudioWaveIndicator(color: androidx.compose.ui.graphics.Color) {
@@ -59,9 +53,11 @@ fun AudioWaveIndicator(color: androidx.compose.ui.graphics.Color) {
 
 @Composable
 fun EditorPage(
-    draft: Draft, categories: List<Category>, missing: Set<String>, source: String, onSource: (String) -> Unit,
-    update: (Draft) -> Unit, onBack: () -> Unit, voice: () -> Unit, organize: () -> Unit, undo: (() -> Unit)?,
-    save: () -> Unit, saving: Boolean, organizing: Boolean, stopOrganizing: () -> Unit,
+    source: String,
+    onSource: (String) -> Unit,
+    onBack: () -> Unit,
+    save: () -> Unit,
+    saving: Boolean,
     pageTitle: String = "省思",
     asrReady: Boolean = false,
     isRecording: Boolean = false,
@@ -72,7 +68,6 @@ fun EditorPage(
     downloadAsr: () -> Unit = {},
 ) {
     val focusRequester = remember { FocusRequester() }
-    val keyboard = LocalSoftwareKeyboardController.current
 
     PageChrome(pageTitle, onBack) {
         Column(

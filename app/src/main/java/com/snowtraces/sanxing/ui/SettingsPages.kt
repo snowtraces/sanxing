@@ -20,6 +20,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
@@ -43,6 +45,7 @@ fun PortraitPage(
     settings: () -> Unit,
     tap: (String) -> Unit
 ) {
+    val haptic = LocalHapticFeedback.current
     var showResolvedDialog by remember { mutableStateOf(false) }
 
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
@@ -95,7 +98,10 @@ fun PortraitPage(
                                     .heightIn(min = 44.dp)
                                     .graphicsLayer { this.alpha = alpha }
                                     .semantics { contentDescription = "${theme.label}，出现 ${theme.sources.size} 次" }
-                                    .clickable(role = Role.Button, onClickLabel = "三省消障") { tap(theme.id) },
+                                    .clickable(role = Role.Button, onClickLabel = "三省消障") {
+                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                        tap(theme.id)
+                                    },
                                 color = if (isHighFreq) Pine.copy(alpha = 0.85f) else Ivory,
                                 contentColor = if (isHighFreq) Ivory else JiaoMo,
                                 border = BorderStroke(1.dp, if (isHighFreq) Pine else DanMo),

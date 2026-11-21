@@ -253,15 +253,6 @@ private fun SanshengApp(store: JournalStore, settings: AiSettings, activity: Mai
         }
     }
 
-    fun launchVoice() {
-        Log.d("SanSheng_Voice", "[DEBUG_LOG] launchVoice requested. asrReady=$asrReady, asrDownloading=$asrDownloading")
-        if (asrReady) {
-            toggleOfflineRecordAction?.invoke()
-        } else if (!asrDownloading) {
-            downloadAsrModel()
-        }
-    }
-
     fun deleteAsrModel() {
         ModelDownloader.deleteModel(activity.applicationContext)
         asrReady = false
@@ -533,10 +524,12 @@ private fun SanshengApp(store: JournalStore, settings: AiSettings, activity: Mai
                         TextButton(onClick = ::load) { Text("重试") }
                     } else CircularProgressIndicator()
                 }
-                route == "editor" -> EditorPage(draft, categories, missing, source, { source = it },
-                    { draft = it; missing = missing.intersect(it.missing()) }, ::back, ::launchVoice,
-                    ::organize, original?.let { prior -> { draft = prior; original = null; missing = emptySet() } },
-                    ::saveDraft, saving, organizeJob != null, { organizeJob?.cancel(); organizeJob = null },
+                route == "editor" -> EditorPage(
+                    source = source,
+                    onSource = { source = it },
+                    onBack = ::back,
+                    save = ::saveDraft,
+                    saving = saving,
                     pageTitle = if (item != null && item.id == editorId) "润色心法" else "省思",
                     asrReady = asrReady,
                     isRecording = isOfflineRecording,
@@ -544,7 +537,8 @@ private fun SanshengApp(store: JournalStore, settings: AiSettings, activity: Mai
                     toggleOfflineRecord = ::toggleOfflineRecord,
                     asrDownloading = asrDownloading,
                     asrProgress = asrProgress,
-                    downloadAsr = ::downloadAsrModel)
+                    downloadAsr = ::downloadAsrModel
+                )
                 route == "detail" -> {
                     val sortedRecords = remember(records) {
                         records.sortedWith(compareByDescending<Reflection> { it.occurredAtMillis }.thenByDescending { it.createdAtMillis })
