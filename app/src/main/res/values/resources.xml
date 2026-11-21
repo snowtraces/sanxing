@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">三省</string>
+    <style name="Theme.Sanxing.Base" parent="android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">#F5F1E8</item>
+        <item name="android:statusBarColor">#F5F1E8</item>
+        <item name="android:navigationBarColor">#202F29</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:colorAccent">#39594D</item>
+    </style>
+    <style name="Theme.Sanxing" parent="Theme.Sanxing.Base" />
+</resources>
