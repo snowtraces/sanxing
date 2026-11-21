@@ -23,7 +23,7 @@
 - [x] Task 5: 优化 AI 结构化整理 Prompt 与异常友好兜底 (AI Prompt Tuning & Robust UX)
   - Acceptance: 优化 Prompt 确保从日常草稿精准提炼出“事·省（不应该...）·悟（应该...）”；增强 Markdown 代码块剥离容错；提供清晰的中文超时/网络错误提示。
   - Verify: `.\gradlew.bat :app:testDebugUnitTest` 验证 AI 契约测试通过。
-  - Files: `app/src/main/java/com/snowtraces/sanxing/aiassist/AiClient.kt`, `app/src/test/java/com/snowtraces/sansheng/AiClientTest.kt`
+  - Files: `app/src/main/java/com/snowtraces/sanxing/aiassist/AiClient.kt`, `app/src/test/java/com/snowtraces/sanxing/AiClientTest.kt`
 
 - [x] Task 6: 全链路自动化测试与交付 APK 构建 (Full E2E Test & APK Build)
   - Acceptance: 全套单元测试与 Lint 检查 100% 绿色通过，成功构建出可正常安装的 debug APK。
@@ -47,11 +47,10 @@
   - Verify: 编译通过，单元测试通过，打包生成最新 APK。
   - Files: `MainActivity.kt`, `ui/ReviewPages.kt`, `ui/SettingsPages.kt`, `ui/JournalPages.kt`
 
-- [x] Task 9: 预置水墨禅意模拟复盘数据与四字短标气泡 (Sample Reflections & Bubble Refinement)
+- [x] Task 9: 四字短标气泡与生产假数据剥除 (Sample Reflections Stripping & Bubble Refinement)
   - Acceptance:
-    1. 预置涵盖工作、情绪、策略、学习、交际 5 大心性维度的精选真实反思数据。
-    2. 本地 SQLite 数据库在新装或初次启动为空时自动注入样本数据。
-    3. 画像气泡算法适配标点截断，提炼出四字短标（如「急躁打断」、「熬夜内耗」、「盲目应承」）。
+    1. 画像气泡算法适配标点截断，精准提炼出四字短标（如「急躁打断」、「熬夜内耗」、「盲目应承」）。
+    2. 正式发布环境彻底剥离测试假数据与硬编码密钥，保持首装纯净素笺空态；测试数据剥离至独立单元测试中。
   - Verify: `.\gradlew.bat :app:testDebugUnitTest` 验证通过，APK 构建完成。
   - Files: `journal/Journal.kt`, `journal/JournalStore.kt`, `portrait/Themes.kt`, `MainActivity.kt`, `JournalTest.kt`
 
