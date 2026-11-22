@@ -13,5 +13,6 @@ local.properties
 *.aab
 *.jks
 *.keystore
+!app/release.keystore
 .vscode/
 tools/raw_watermarks/
