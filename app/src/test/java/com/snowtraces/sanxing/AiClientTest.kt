@@ -59,6 +59,30 @@ class AiClientTest {
         val client = AiClient { _, _, _ -> """{"same": true, "label": "会议分心"}""" }
         val label = client.sameBehavior(config, "开会玩手机", "开会看消息")
         assertEquals("会议分心", label)
+
+        val client6 = AiClient { _, _, _ -> """{"same": true, "label": "贪多求全内耗"}""" }
+        val label6 = client6.sameBehavior(config, "贪多求全", "接太多任务")
+        assertEquals("贪多求全内耗", label6)
+    }
+
+    @Test
+    fun organizeStripsDisallowedPrefixes() {
+        val json = """
+            {
+              "title": "急躁辩解",
+              "categoryId": "work",
+              "description": "材料中提出：团队评审时被指出方案疏漏，当即打断对方陈词自辩。",
+              "reflection": "我反思：心性浮躁未定，执于我相而急于辩白，失却虚怀自察之量。",
+              "action": "我计划：闻过则喜，静听谨省；临辩先敛心神三息，而后徐徐陈辞。"
+            }
+        """.trimIndent()
+        val client = AiClient { _, _, _ -> json }
+        val draft = client.organize(config, "原始", Draft(), categories)
+
+        assertEquals("急躁辩解", draft.title)
+        assertEquals("团队评审时被指出方案疏漏，当即打断对方陈词自辩。", draft.description)
+        assertEquals("心性浮躁未定，执于我相而急于辩白，失却虚怀自察之量。", draft.reflection)
+        assertEquals("闻过则喜，静听谨省；临辩先敛心神三息，而后徐徐陈辞。", draft.action)
     }
 
     @Test

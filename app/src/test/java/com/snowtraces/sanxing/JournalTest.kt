@@ -27,7 +27,7 @@ class JournalTest {
         val themes = reconcileThemes(samples, emptyList())
         assertTrue(themes.isNotEmpty())
         themes.forEach { theme ->
-            assertTrue(theme.label.length in 2..4)
+            assertTrue(theme.label.length in 2..6)
         }
     }
 

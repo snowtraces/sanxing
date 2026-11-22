@@ -9,13 +9,18 @@ private val han = Regex("\\p{IsHan}")
 private val content = Regex("[\\p{L}\\p{N}]")
 private fun normalized(text: String): String = content.findAll(text.lowercase()).joinToString("") { it.value }
 
+private val STOP_WORDS = Regex("^(材料中?(提出|提到|指出)|我(反思|反省|计划|总是|不应该|不该|应该|需要|经常|容易)?|面对|遇到|处于|在|关于|由于|因为)+")
+
 private fun shortLabel(text: String): String {
-    val clean = text.trim().replace(Regex("^(我)?(不应该|不该|应该|需要|总是)"), "")
+    val clean = text.trim()
+        .replace(STOP_WORDS, "")
+        .replace(Regex("^(我不该|不应该|应该|需要|总是|容易|动辄|往往)"), "")
+        .trim()
     val head = clean.split(Regex("[，,。；;：:\\s]")).firstOrNull { it.isNotBlank() } ?: clean
-    val chinese = han.findAll(head).take(4).joinToString("") { it.value }
-    if (chinese.length >= 2) return chinese
-    val fallback = han.findAll(clean).take(4).joinToString("") { it.value }
-    return if (fallback.length >= 2) fallback else "日常反思"
+    val chinese = han.findAll(head).take(6).joinToString("") { it.value }
+    if (chinese.length in 2..6) return chinese
+    val fallback = han.findAll(clean).take(6).joinToString("") { it.value }
+    return if (fallback.length >= 2) fallback.take(6) else "省思自省"
 }
 
 fun reconcileThemes(records: List<Reflection>, previous: List<Theme>): List<Theme> {
